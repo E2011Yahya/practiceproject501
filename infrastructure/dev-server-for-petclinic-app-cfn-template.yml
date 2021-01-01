@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This Cloudformation Template creates a Docker machine on EC2 Instance. 
+  Docker Machine will run on Amazon Linux 2 (ami-026dea5602e368e96) EC2 Instance with
+  custom security group allowing SSH connections from anywhere on port 22.
+
+Parameters:
+  KeyPairName:
+    Description: Enter your key pair for SSH
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must one of the existing EC2KeyPair
+  
+Resources:
+  DevServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH and HTTP for Petclinic Microservices
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0 
+        - IpProtocol: tcp
+          FromPort: 9090
+          ToPort: 9090
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8081
+          ToPort: 8081
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8082
+          ToPort: 8082
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8083
+          ToPort: 8083
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8888
+          ToPort: 8888
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9411
+          ToPort: 9411
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 7979
+          ToPort: 7979
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9091
+          ToPort: 9091
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 8761
+          ToPort: 8761
+          CidrIp: 0.0.0.0/0           
+     
+  DevServerLT:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        IamInstanceProfile: 
+          IamInstanceProfile
+        ImageId: ami-0be2609ba883822ec
+        InstanceType: t2.medium 
+        KeyName: !Ref KeyPairName
+        SecurityGroupIds: 
+          - !GetAtt DevServerSecurityGroup.GroupId 
+        UserData: 
+          Fn::Base64: |
+            #! /bin/bash
+            sudo yum update -y 
+            hostnamectl set-hostname petclinic-dev-server
+            sudo amzon-linux-extras install docker -y
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            sudo usermod -a -G docker ec2-user
+            sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+            -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            sudo yum install git -y 
+            sudo yum install java-11-amazon-corretto -y
+            git clone https://github.com/E2011Yahya/practiceproject501.git 
+            cd practiceproject501 
+            git fetch 
+            git checkout dev  
+
+  PetclinicServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref DevServerLT
+        Version: !GetAtt DevServerLT.LatestVersionNumber
+      Tags:                
+        - Key: Name
+          Value: !Sub Petclinic-Dev-Server ${AWS::StackName}
+Outputs:
+  PetclinicServerDNSName:
+    Description: Petclinic App URL
+    Value: !GetAtt PetclinicServer.PublicDnsName
