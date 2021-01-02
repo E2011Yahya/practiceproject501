@@ -98,7 +98,6 @@ Resources:
           sudo amazon-linux-extras install ansible2 -y
           sudo pip install boto3
           
-
 Outputs:
   JenkinsDNS:
     Description: Jenkins Server DNS Name 
