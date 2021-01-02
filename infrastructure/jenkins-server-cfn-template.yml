@@ -70,7 +70,7 @@ Resources:
           #! /bin/bash 
           sudo yum update -y
           hostnamectl set-hostname petclinic-jenkins-server
-          sudo amzon-linux-extras install docker -y
+          sudo amazon-linux-extras install docker -y
           sudo systemctl start docker
           sudo systemctl enable docker
           sudo usermod -a -G docker ec2-user
@@ -85,8 +85,8 @@ Resources:
           sudo stemctl start jenkins
           sudo stemctl enable jenkins
           usermod -a -G docker jenkins
-          cp /lib/systemd/system/docker.service /lib/systemd/system/docker.service.bak
-          sed -i 's/^ExecStart=.*/ExecStart=\/usr\/bin\/dockerd -H tcp:\/\/127.0.0.1:2375 -H unix:\/\/\/var\/run\/docker.sock/g' /lib/systemd/system/docker.service
+          sudo cp /lib/systemd/system/docker.service /lib/systemd/system/docker.service.bak
+          sudo sed -i 's/^ExecStart=.*/ExecStart=\/usr\/bin\/dockerd -H tcp:\/\/127.0.0.1:2375 -H unix:\/\/\/var\/run\/docker.sock/g' /lib/systemd/system/docker.service
           sudo systemctl daemon-reload
           sudo systemctl restart docker
           sudo systemctl restart jenkins
