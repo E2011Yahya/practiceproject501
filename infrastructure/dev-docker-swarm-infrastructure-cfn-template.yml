@@ -84,7 +84,7 @@ Resources:
         IamInstanceProfile: 
           Arn: !GetAtt EC2Profile.Arn
         SecurityGroupIds: 
-          - !GetAtt DockerMachinesSecurityGroup.GroupID
+          - !GetAtt DockerMachinesSecurityGroup.GroupId
         TagSpecifications: 
           - ResourceType: instance
             Tags: 
