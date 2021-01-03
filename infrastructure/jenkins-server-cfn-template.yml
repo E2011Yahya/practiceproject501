@@ -96,7 +96,7 @@ Resources:
           sudo ./aws/install
           sudo yum install python3 -y
           sudo amazon-linux-extras install ansible2 -y
-          sudo pip install boto3
+          sudo pip3 install boto3
           
 Outputs:
   JenkinsDNS:
