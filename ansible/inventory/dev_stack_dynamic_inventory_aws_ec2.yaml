@@ -1,18 +1,10 @@
-# Minimal example using environment vars or instance role credentials
-
-# Example using constructed features to create groups and set ansible_host
 plugin: aws_ec2
 regions:
   - "us-east-1"
-
 filters:
-  # All instances with their `Environment` tag set to `dev`
   tag:app-stack-name: APP_STACK_NAME
-  # All dev and QA hosts
-  tag:Environment: dev 
-   
+  tag:environment: dev
 keyed_groups:
-  # Add hosts to tag_Name_Value groups for each Name/Value tag pair
   - key: tags['app-stack-name']
     prefix: 'app_stack_'
     separator: ''
@@ -23,11 +15,8 @@ keyed_groups:
     prefix: 'env_'
     separator: ''
   - key: tags['server']
-    separator: ''  
-
+    separator: ''
 hostnames:
-  - "private-ip-address"    
+  - "private-ip-address"
 compose:
-  # Use the private IP address to connect to the host
-  # (note: this does not modify inventory_hostname, which is set via I(hostnames))
   ansible_user: "'ec2-user'"
