@@ -93,13 +93,13 @@ Resources:
               - Key: environment
                 Value: dev
         
-  LogicalID:
+  DockerInstance1:
     Type: AWS::EC2::Instance
     DependsOn:
       - "DockerInstance2"
     Properties:
       LaunchTemplate:
-        LaunchTemplateId: !Ref  DockerMachineLT
+        LaunchTemplateId: !Ref DockerMachineLT
         Version: !GetAtt DockerMachineLT.LatestVersion Number 
       Tags:                
         - Key: server
