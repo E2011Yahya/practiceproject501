@@ -100,7 +100,7 @@ Resources:
     Properties:
       LaunchTemplate:
         LaunchTemplateId: !Ref DockerMachineLT
-        Version: !GetAtt DockerMachineLT.LatestVersion Number 
+        Version: !GetAtt DockerMachineLT.LatestVersionNumber 
       Tags:                
         - Key: server
           Value: docker-instance-1                       
