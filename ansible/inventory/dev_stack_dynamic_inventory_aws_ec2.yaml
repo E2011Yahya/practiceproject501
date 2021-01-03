@@ -13,15 +13,15 @@ filters:
    
 keyed_groups:
   # Add hosts to tag_Name_Value groups for each Name/Value tag pair
-  - prefix: 'app_stack_'
-    key: tags['app-stack-name']
+  - key: tags['app-stack-name']
+    prefix: 'app_stack_'
     separator: ''
-  - prefix: 'role'
-    key: tags['swarm-role']
-    separator: ''    
-  - prefix: 'env_'
-    key: tags['environment']
-    separator: '' 
+  - key: tags['swarm-role']
+    prefix: 'role_'
+    separator: ''
+  - key: tags['environment']
+    prefix: 'env_'
+    separator: ''
   - key: tags['server']
     separator: ''  
 
